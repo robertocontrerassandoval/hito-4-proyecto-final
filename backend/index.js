@@ -1,9 +1,11 @@
 import express from "express";
-import routes from "./routes/router.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 const PORT =  process.env.PORT || 3000;
 
-app.use(express.json());
+
+//Routes
+app.use('/', userRoutes);
 
 app.listen(PORT, () => {console.log(`Listening on port ${PORT}`);});
