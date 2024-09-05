@@ -6,6 +6,8 @@ const router = express.Router();  //aqui es donde se conecta
 
 router.get('/', controller.home);
 
+router.post('/create-product', controller.createProduct);
 
+router.get('*', controller.notFound);
 
 export default router
