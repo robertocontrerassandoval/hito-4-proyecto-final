@@ -1,6 +1,6 @@
 import pg from "pg";
 import 'dotenv/config';
-const {Pool} = pg;
+const {Pool} = pg; //este Pool es de pg
 
 
 const {DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, } = process.env;
@@ -21,6 +21,6 @@ try {
     
 }
 
-const pool = new Pool(config)
+const pool = new Pool(config)  //este pool es el que conecta con la base de datos
 
 export default pool
