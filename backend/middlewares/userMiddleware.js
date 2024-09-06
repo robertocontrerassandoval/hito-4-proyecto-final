@@ -1,11 +1,7 @@
-import { usersModel } from '../models/users.model.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
 config();
 
-
-// userMiddleware.js
+// Validar creación de usuario
 export const validateUserCreation = (req, res, next) => {
     const { name, email, password, date_birth } = req.body;
 
@@ -13,15 +9,15 @@ export const validateUserCreation = (req, res, next) => {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
-    // Regex para validar formato de email
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ message: 'Email no válido' });
     }
 
-    next(); // Si todo está bien, pasa al siguiente middleware o controlador
+    next();
 };
 
+// Validar login
 export const validateLogin = (req, res, next) => {
     const { email } = req.body;
 
@@ -34,5 +30,19 @@ export const validateLogin = (req, res, next) => {
         return res.status(400).json({ message: 'Email no válido' });
     }
 
-    next(); // Si todo está bien, pasa al siguiente middleware o controlador
+    next();
+};
+
+// Middleware para verificar el token JWT
+export const verifyToken = (req, res, next) => {
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ message: 'Acceso denegado' });
+
+    try {
+        const verified = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = verified;  // Guardar los datos del usuario verificado en req.user
+        next();  // Continuar al siguiente middleware o controlador
+    } catch (error) {
+        res.status(400).json({ message: 'Token no válido' });
+    }
 };

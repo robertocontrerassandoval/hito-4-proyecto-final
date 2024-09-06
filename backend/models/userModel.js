@@ -66,5 +66,5 @@ const getUser = async (email) => {
 export const model = {
     addProduct, 
     addUser, 
-    getUser
+    getUser,
 }
