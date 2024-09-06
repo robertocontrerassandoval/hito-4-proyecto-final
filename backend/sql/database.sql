@@ -1,26 +1,27 @@
 //tabla usurio
-create table users (
-	id serial primary key,
-	name varchar(50) not null,
-	email varchar(50) not null unique,
-	password varchar(60) not null,
-	date_birth int
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(60) NOT NULL,
+    date_birth DATE  -- DATE para almacenar fechas
 );
 
 //tabla de productos
-create table product (
-	id serial primary key,
-	titulo varchar(100) not null,
-	imagen varchar(200),
-	descripcion varchar(200),
-	precio int ,
-	stock int
+CREATE TABLE product (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    imagen VARCHAR(200),
+    descripcion TEXT,  -- TEXT para permitir descripciones largas
+    precio NUMERIC(10, 2),  -- NUMERIC para precios con decimales
+    stock INT
 );
 
 //tabla de favoritos
-
-create table favorito(
-	id serial primary key,
-	id_product int,
-	id_user int
+CREATE TABLE favorito (
+    id SERIAL PRIMARY KEY,
+    id_product INT,
+    id_user INT,
+    CONSTRAINT fk_product FOREIGN KEY (id_product) REFERENCES product(id) ON DELETE CASCADE,  -- Llave foránea
+    CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE  -- Llave foránea
 );
