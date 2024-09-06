@@ -34,10 +34,6 @@ const login = async(req, res) => {
         console.log('Error', error);
     }}
 
-   
-
-
-
 const notFound = (req, res) => {
     res.send('404 - Not Found');
 }
