@@ -1,14 +1,18 @@
-import express from "express";
-import userRoutes from "./routes/userRoutes.js";
-
-const app = express();
-const PORT =  process.env.PORT || 3000;
+import express from 'express';
+import userRoutes from './routes/userRoutes.js';  // Importar las rutas
+import { config } from 'dotenv';
+config();
 
 //Middleware
-app.use(express.json()); //para leer el body
+const app = express();
+app.use(express.json());  // Para leer JSON en el body de las peticiones
 app.use(express.urlencoded({ extended: true })); //si es de react y con formulario
 
 //Routes
 app.use('/', userRoutes);
 
-app.listen(PORT, () => {console.log(`🚨🚨 Server running on port 🚨🚨 ${PORT}`);});
+const PORT =  process.env.PORT || 3000;
+
+app.listen(PORT, () => {console.log(`🚨🚨 Server running on port 🚨🚨 ${PORT}`);
+
+});
