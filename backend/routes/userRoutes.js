@@ -8,6 +8,10 @@ router.get('/', controller.home);
 
 router.post('/create-product', controller.createProduct);
 
+router.post('/create-user', controller.createUser);
+
+router.post('/login', controller.login);
+
 router.get('*', controller.notFound);
 
 export default router
