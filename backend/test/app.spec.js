@@ -1,17 +1,51 @@
 import request from 'supertest';
-import { app } from '../index'; // Ajusta la ruta según la ubicación de tu archivo `app.js`
+import app from '../index.js'; 
 
-describe('App Tests', () => {
-  it('should respond to GET requests on the /home', async () => {
-    const response = (await request(app).get('/:id')).send();
-    expect(response.status).toBe(200); // Ajusta el código de estado según la implementación
+describe('Product Routes', () => {
+  it('should get all products', async () => {
+    const res = await request(app).get('/products');
+    expect(res.status).toBe(200);
+    expect(res.body).toBeInstanceOf(Array);
   });
 
-  it('should respond to POST requests on the /', async () => {
-    const response = await request(app).post('/create-user').send({ name: 'John Doe' });
-    expect(response.status).toBe(201); // Ajusta el código de estado según la implementación
-    expect(response.body).toHaveProperty('name', 'John Doe');
+  it('should get a product by ID', async () => {
+    const res = await request(app).get('/products/1');
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('id');
   });
 
- 
+  it('should create a new product', async () => {
+    const res = await request(app)
+      .post('/products')
+      .send({
+        titulo: 'New Product',
+        imagen: 'url',
+        descripcion: 'Description',
+        precio: 100,
+        stock: 10
+      });
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('product');
+  });
+
+  it('should update a product', async () => {
+    const res = await request(app)
+      .put('/products/1')
+      .send({
+        titulo: 'Updated Product',
+        imagen: 'new_url',
+        descripcion: 'New Description',
+        precio: 150,
+        stock: 5
+      });
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('product');
+  });
+
+  it('should delete a product', async () => {
+    const res = await request(app).delete('/products/1');
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('message', 'Producto eliminado');
+  });
 });
+
