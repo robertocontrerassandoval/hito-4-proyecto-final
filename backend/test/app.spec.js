@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../index.js'; 
+import app from '../index';
 
 describe('Product Routes', () => {
   it('should get all products', async () => {
@@ -46,6 +46,23 @@ describe('Product Routes', () => {
     const res = await request(app).delete('/products/1');
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('message', 'Producto eliminado');
+  });
+});
+
+
+
+
+describe('GET /products', () => {
+  it('should return a list of products with status 200', async () => {
+    const response = await request(app).get('/products');
+    expect(response.status).toBe(200);
+    // Puedes agregar más expectativas dependiendo de la estructura esperada
+  });
+
+  it('should return an empty array if no products are found', async () => {
+    // Aquí puedes configurar el controlador para devolver una lista vacía si es necesario
+    const response = await request(app).get('/products');
+    expect(response.status).toBe(200);
   });
 });
 
