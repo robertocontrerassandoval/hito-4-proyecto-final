@@ -6,15 +6,15 @@ import { verifyToken } from '../middlewares/userMiddleware.js';  // Middleware p
 const router = express.Router();
 
 // Las rutas de productos
-router.get('/', productController.getProducts);  // Obtener todos los productos
+router.get('/productos', productController.getProducts);  // Obtener todos los productos
 
-router.get('/:id', validateProductId, productController.getProductById);  // Obtener producto por ID
+router.get('/producto/:id', validateProductId, productController.getProductById);  // Obtener producto por ID
 
-router.post('/', verifyToken, validateProductData, productController.createProduct);  // Crear producto (requiere token y validación)
+router.post('/agregar-producto', verifyToken, validateProductData, productController.createProduct);  // Crear producto (requiere token y validación)
 
-router.put('/:id', verifyToken, validateProductId, validateProductData, productController.updateProduct);  // Actualizar producto por ID
+router.put('/actualizar-producto/:id', verifyToken, validateProductId, validateProductData, productController.updateProduct);  // Actualizar producto por ID
 
-router.delete('/:id', verifyToken, validateProductId, productController.deleteProduct);  // Eliminar producto por ID (requiere token)
+router.delete('/eliminar-producto/:id', verifyToken, validateProductId, productController.deleteProduct);  // Eliminar producto por ID (requiere token)
 
 export default router;
 
