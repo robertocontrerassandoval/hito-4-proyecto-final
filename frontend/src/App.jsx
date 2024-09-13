@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {  Route, Routes } from 'react-router-dom';
 import Home from './view/Home';
@@ -15,51 +15,13 @@ import { AppProvider } from './context/AppContext';
 const urlBaseServer = "http://localhost:3000"; // a este puerto de apuntar
 
 
-function App() {
 
-  //users
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [date_birth, setDate_birth] = useState("");
-
-  //products
-  const [titulo, setTitulo] = useState("");
-  const [imagen, setImagen] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [stock, setStock] = useState("");
-
-
-
-//obtener usuarios
-  const getName = async () => {
-    const { data: name } = await axios.get(urlBaseServer + "/get-name");
-    setName([...name]);
-  };
-
-  //agregar usuario
-  const agregarUser = async () => {
-    const user = { name, email, password, date_birth };
-    await axios.post(urlBaseServer + "/create-user", user);
-    getName();
-  };
-
-  //eliminar producto
-  const eliminarProduct = async (id) => {
-    await axios.delete(urlBaseServer + `/products/${id}`);
-    getProcucts();
-  };
-
-
-useEffect(() => {
-  getName();
-  
-})
 const App = () => {
   return (
     <>
      <AppProvider>
+
+  
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -75,7 +37,8 @@ const App = () => {
     
   );
 };
-}
+
 
 export default App;
 
+12
