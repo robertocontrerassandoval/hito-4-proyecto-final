@@ -17,13 +17,17 @@ const config = {
 const pool = new Pool(config); // Primero inicializamos el pool
 
 // Probar la conexión
-(async () => {
+
     try {
         await pool.query('SELECT NOW()');
         console.log('🚨🚨 Base de datos conectada 🚨🚨');
     } catch (error) {
         console.error('Error al conectar con la base de datos:', error);
     }
-})();
+
+
+
+
+
 
 export default pool;

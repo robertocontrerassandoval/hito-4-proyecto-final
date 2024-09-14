@@ -3,11 +3,12 @@ import userRoutes from './routes/userRoutes.js';  // Importar las rutas de usuar
 import productRoutes from './routes/productRoutes.js';  // Importar las rutas de productos
 import { config } from 'dotenv';
 import cors from 'cors';
+//import  setupDatabase  from './db/dbConfig.js';
 
 config();  // Cargar variables de entorno desde .env
 
 //const express = require('express');
-
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 const app = express();
@@ -19,10 +20,16 @@ app.use(express.urlencoded({ extended: true }));  // Para manejar formularios
 app.use('/users', userRoutes);  // Ruta para las operaciones de usuarios
 app.use('/products', productRoutes);  // Ruta para las operaciones de productos
 
-const PORT = process.env.PORT || 3000;
 
-// Server
-app.listen(PORT, () => {
-    console.log(`🚨🚨 Server running on port 🚨🚨 ${PORT}`);
-});
+//const startServer = async () => {
+  
+       // await setupDatabase();
+        app.listen(PORT, () => {
+            console.log(`🚨🚨 Server running on port 🚨🚨 puerto:${PORT}`);
+        });
 
+//}
+
+
+
+//startServer();
