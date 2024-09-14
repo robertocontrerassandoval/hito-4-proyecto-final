@@ -1,4 +1,4 @@
-//tabla usurio
+-- Tabla de usuarios
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -7,8 +7,8 @@ CREATE TABLE users (
     date_birth DATE  -- DATE para almacenar fechas
 );
 
-//tabla de productos
-CREATE TABLE product (
+-- Tabla de productos
+CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     imagen VARCHAR(200),
@@ -17,11 +17,15 @@ CREATE TABLE product (
     stock INT
 );
 
-//tabla de favoritos
-CREATE TABLE favorito (
+-- Tabla de favoritos
+CREATE TABLE favoritos (
     id SERIAL PRIMARY KEY,
-    id_product INT,
-    id_user INT,
-    CONSTRAINT fk_product FOREIGN KEY (id_product) REFERENCES product(id) ON DELETE CASCADE,  -- Llave foránea
+    id_product INT NOT NULL,
+    id_user INT NOT NULL,
+    CONSTRAINT fk_product FOREIGN KEY (id_product) REFERENCES products(id) ON DELETE CASCADE,  -- Llave foránea
     CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE  -- Llave foránea
 );
+
+-- Índices para mejorar el rendimiento en búsquedas
+CREATE INDEX idx_favoritos_product ON favoritos (id_product);
+CREATE INDEX idx_favoritos_user ON favoritos (id_user);

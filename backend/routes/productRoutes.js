@@ -1,20 +1,23 @@
 import express from 'express';
 import { productController } from '../controllers/productController.js';
-import { validateProductData, validateProductId } from '../middlewares/productMiddleware.js';  // Corrige la ruta de los middlewares
-import { verifyToken } from '../middlewares/userMiddleware.js';  // Middleware para verificar el token
+import { validateProductData, validateProductId } from '../middlewares/productMiddleware.js';  // Asegúrate de que la ruta sea correcta
+import { verifyToken } from '../middlewares/userMiddleware.js';  // Asegúrate de que la ruta sea correcta
 
 const router = express.Router();
 
-// Las rutas de productos
-router.get('/productos', productController.getProducts);  // Obtener todos los productos
+// Ruta para obtener todos los productos
+router.get('/productos', productController.getProducts);
 
-router.get('/producto/:id', validateProductId, productController.getProductById);  // Obtener producto por ID
+// Ruta para obtener un producto por su ID
+router.get('/producto/:id', validateProductId, productController.getProductById);
 
-router.post('/agregar-producto', verifyToken, validateProductData, productController.createProduct);  // Crear producto (requiere token y validación)
+// Ruta para crear un nuevo producto (requiere autenticación)
+router.post('/producto', verifyToken, validateProductData, productController.createProduct);
 
-router.put('/actualizar-producto/:id', verifyToken, validateProductId, validateProductData, productController.updateProduct);  // Actualizar producto por ID
+// Ruta para actualizar un producto por su ID (requiere autenticación)
+router.put('/producto/:id', verifyToken, validateProductId, validateProductData, productController.updateProduct);
 
-router.delete('/eliminar-producto/:id', verifyToken, validateProductId, productController.deleteProduct);  // Eliminar producto por ID (requiere token)
+// Ruta para eliminar un producto por su ID (requiere autenticación)
+router.delete('/producto/:id', verifyToken, validateProductId, productController.deleteProduct);
 
 export default router;
-

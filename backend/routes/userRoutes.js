@@ -4,14 +4,20 @@ import { validateUserCreation, validateLogin, verifyToken } from '../middlewares
 
 const router = express.Router();
 
+// Ruta principal
 router.get('/', controller.home);
 
-router.post('/create-product', verifyToken, controller.createProduct);  // Ruta protegida por JWT
+// Ruta para crear un nuevo producto (requiere autenticación con JWT)
+router.post('/producto', verifyToken, controller.createProduct);
 
-router.post('/create-user', validateUserCreation, controller.createUser);
+// Ruta para crear un nuevo usuario
+router.post('/usuario', validateUserCreation, controller.createUser);
 
+// Ruta para login de usuario
 router.post('/login', validateLogin, controller.login);
 
-router.get('*', controller.notFound);
+// Ruta para manejar errores 404 (no encontrada)
+router.use('*', controller.notFound);
 
 export default router;
+

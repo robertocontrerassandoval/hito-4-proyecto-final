@@ -1,35 +1,43 @@
 import express from 'express';
-import userRoutes from './routes/userRoutes.js';  // Importar las rutas de usuarios
-import productRoutes from './routes/productRoutes.js';  // Importar las rutas de productos
-import { config } from 'dotenv';
 import cors from 'cors';
-//import  setupDatabase  from './db/dbConfig.js';
+import { config } from 'dotenv';
+import productRoutes from './routes/productRoutes.js';  // Ajusta la ruta a tus archivos de rutas
+import userRoutes from './routes/userRoutes.js';  // Ajusta la ruta a tus archivos de rutas
 
-config();  // Cargar variables de entorno desde .env
+// Configuración del entorno
+config();
 
-//const express = require('express');
-const PORT = process.env.PORT || 3000;
+// Inicializar la aplicación Express
+const app = express();
 
 // Middleware
-const app = express();
-app.use(cors());
-app.use(express.json());  // Para leer JSON en el body de las peticiones
-app.use(express.urlencoded({ extended: true }));  // Para manejar formularios
+app.use(cors()); // Permitir solicitudes de diferentes orígenes
+app.use(express.json()); // Analizar el cuerpo de las solicitudes en formato JSON
 
-// Routes
-app.use('/users', userRoutes);  // Ruta para las operaciones de usuarios
-app.use('/products', productRoutes);  // Ruta para las operaciones de productos
+// Rutas
+app.use('/api/products', productRoutes);  // Ruta para las operaciones de productos
+app.use('/api/users', userRoutes);  // Ruta para las operaciones de usuarios
 
+// Ruta raíz
+app.get('/', (req, res) => {
+    res.send('Bienvenido a la API de e-commerce');
+});
 
-//const startServer = async () => {
-  
-       // await setupDatabase();
-        app.listen(PORT, () => {
-            console.log(`🚨🚨 Server running on port 🚨🚨 puerto:${PORT}`);
-        });
+// Manejo de errores 404
+app.use((req, res, next) => {
+    res.status(404).json({ message: 'Ruta no encontrada' });
+});
 
-//}
+// Manejo de errores internos del servidor
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Error interno del servidor' });
+});
 
+// Puerto de la aplicación
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`🚨🚨 Servidor corriendo en el puerto 🚨🚨 ${PORT}`);
+});
 
-
-//startServer();
+export default app;

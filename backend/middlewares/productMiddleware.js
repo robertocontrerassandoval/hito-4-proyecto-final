@@ -1,3 +1,4 @@
+// Middleware para validar los datos de un producto
 export const validateProductData = (req, res, next) => {
     const { titulo, imagen, descripcion, precio, stock } = req.body;
 
@@ -12,12 +13,14 @@ export const validateProductData = (req, res, next) => {
     }
 
     // Validar que el precio sea un número válido y mayor que 0
-    if (isNaN(precio) || precio <= 0) {
+    const precioNumber = parseFloat(precio);
+    if (isNaN(precioNumber) || precioNumber <= 0) {
         return res.status(400).json({ message: 'El precio debe ser un número mayor que 0' });
     }
 
-    // Validar que el stock sea un número entero
-    if (!Number.isInteger(stock) || stock < 0) {
+    // Validar que el stock sea un número entero no negativo
+    const stockNumber = parseInt(stock, 10);
+    if (isNaN(stockNumber) || stockNumber < 0) {
         return res.status(400).json({ message: 'El stock debe ser un número entero mayor o igual a 0' });
     }
 
@@ -25,13 +28,16 @@ export const validateProductData = (req, res, next) => {
     next();
 };
 
+// Middleware para validar el ID de un producto
 export const validateProductId = (req, res, next) => {
     const { id } = req.params;
 
     // Validar que el ID sea un número entero
-    if (!Number.isInteger(Number(id))) {
+    const idNumber = parseInt(id, 10);
+    if (isNaN(idNumber) || idNumber <= 0) {
         return res.status(400).json({ message: 'ID de producto no válido' });
     }
 
+    // Si todo está bien, pasar al siguiente middleware o controlador
     next();
 };

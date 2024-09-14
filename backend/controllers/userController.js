@@ -1,7 +1,9 @@
-import { userModel } from '../models/userModel.js';  // Asegúrate que userModel esté correctamente implementado
+import { userModel } from '../models/userModel.js'; // Asegúrate que userModel esté correctamente implementado
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
+import { validationResult } from 'express-validator';
+
 config();
 
 // Controlador Home
@@ -9,15 +11,30 @@ const home = (req, res) => {
     res.send('Home page');
 }
 
-// Crear producto
+// Crear producto (asumiendo que userModel tiene un método para crear productos)
 const createProduct = async (req, res) => {
-    const { titulo, imagen, descripcion, precio, stock } = req.body;
-    const result = await userModel.addProduct({ titulo, imagen, descripcion, precio, stock });
-    res.status(201).send('Producto creado');
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { titulo, imagen, descripcion, precio, stock } = req.body;
+        const result = await userModel.addProduct({ titulo, imagen, descripcion, precio, stock });
+        res.status(201).json({ message: 'Producto creado', product: result });
+    } catch (error) {
+        console.error('Error al crear producto:', error);
+        res.status(500).json({ message: 'Error al crear producto', error });
+    }
 }
 
 // Crear usuario con encriptación de contraseña
 const createUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const { name, email, password, date_birth } = req.body;
 
     try {
@@ -27,20 +44,26 @@ const createUser = async (req, res) => {
 
         // Guardar el usuario en la base de datos
         const result = await userModel.addUser({
-            name, 
-            email, 
-            password: hashedPassword,  // Guardar la contraseña encriptada
-            date_birth
+            name,
+            email,
+            password: hashedPassword, // Guardar la contraseña encriptada
+            date_birth,
         });
 
         res.status(201).json({ message: 'Usuario creado', user: result });
     } catch (error) {
-        res.status(500).json({ message: 'Error al crear el usuario', error });
+        console.error('Error al crear usuario:', error);
+        res.status(500).json({ message: 'Error al crear usuario', error });
     }
 }
 
 // Login con validación de contraseña y generación de JWT
 const login = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { email, password } = req.body;
 
@@ -58,13 +81,14 @@ const login = async (req, res) => {
 
         // Generar un token JWT
         const token = jwt.sign(
-            { id: user.id, email: user.email }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: '1h' }  // Token válido por 1 hora
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } // Token válido por 1 hora
         );
 
         res.status(200).json({ message: 'Login exitoso', token });
     } catch (error) {
+        console.error('Error en el login:', error);
         res.status(500).json({ message: 'Error en el login', error });
     }
 }
@@ -79,5 +103,6 @@ export const controller = {
     createProduct,
     createUser,
     login,
-    notFound
+    notFound,
 };
+
