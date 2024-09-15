@@ -16,7 +16,7 @@ app.use(express.json()); // Analizar el cuerpo de las solicitudes en formato JSO
 
 // Rutas
 app.use('/api/products', productRoutes);  // Ruta para las operaciones de productos
-app.use('/api/users', userRoutes);  // Ruta para las operaciones de usuarios
+app.use('/api/user', userRoutes);  // Ruta para las operaciones de usuarios
 
 // Ruta raíz
 app.get('/', (req, res) => {
