@@ -107,6 +107,19 @@ function Login() {
     }
   };
 
+  //Función para simular la autenticación
+   const fakeLogin = (email, password) => {
+     return new Promise((resolve) => {
+       setTimeout(() => {
+         if (email === 'usuario@example.com' && password === '123456') {
+           resolve({ success: true, user: { nombre: 'Usuario Ejemplo', email: 'usuario@example.com' } });
+         } else {
+           resolve({ success: false });
+         }
+       }, 1000); // Simula un retardo de 1 segundo
+     });
+   };
+
   const loginUser = async (email, password) => {
     const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', {
       method: 'POST',
