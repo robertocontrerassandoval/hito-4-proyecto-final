@@ -1,11 +1,10 @@
-import { userModel } from '../models/userModel.js'; // Asegúrate de que userModel esté correctamente implementado
+import { userModel } from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
 import { validationResult } from 'express-validator';
 
-// Cargar las variables de entorno
-config();
+config(); // Cargar las variables de entorno
 
 // Controlador Home
 const home = (req, res) => {
@@ -21,6 +20,11 @@ const createProduct = async (req, res) => {
 
     try {
         const { titulo, imagen, descripcion, precio, stock } = req.body;
+
+        // Validar entrada de datos
+        if (!titulo || !precio || !stock) {
+            return res.status(400).json({ message: 'Todos los campos obligatorios deben ser completados' });
+        }
 
         // Agregar el producto a la base de datos
         const result = await userModel.addProduct({ titulo, imagen, descripcion, precio, stock });
@@ -41,17 +45,14 @@ const createUser = async (req, res) => {
     const { name, email, password, date_birth } = req.body;
 
     try {
-        // Verificar si el usuario ya existe
         const existingUser = await userModel.getUser(email);
         if (existingUser) {
             return res.status(400).json({ message: 'El usuario ya existe' });
         }
 
-        // Encriptar la contraseña
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Guardar el usuario en la base de datos
         const result = await userModel.addUser({
             name,
             email,
@@ -76,26 +77,18 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Verificar si el usuario existe
         const user = await userModel.getUser(email);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        // Verificar la contraseña
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(400).json({ message: 'Contraseña incorrecta' });
         }
 
-        // Generar el token JWT
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' } // El token expira en 1 hora
-        );
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        // Retornar token y detalles del usuario
         res.status(200).json({ message: 'Login exitoso', token, user: { id: user.id, name: user.name, email: user.email } });
     } catch (error) {
         console.error('Error en el login:', error);

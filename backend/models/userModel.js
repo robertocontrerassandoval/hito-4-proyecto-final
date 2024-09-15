@@ -1,4 +1,4 @@
-import pool from '../db/dbConfig.js';  // Asegúrate de tener configurada la conexión a la base de datos
+import pool from '../db/dbConfig.js';
 
 export const userModel = {
     // Añadir un nuevo usuario
@@ -23,7 +23,7 @@ export const userModel = {
         try {
             const result = await pool.query(sql, [email]);
             if (result.rows.length === 0) {
-                return null;  // Usuario no encontrado
+                return null;
             }
             return result.rows[0];
         } catch (error) {
@@ -32,7 +32,7 @@ export const userModel = {
         }
     },
 
-    // Añadir un producto (esto parece fuera de lugar en el modelo de usuario)
+    // Añadir un producto
     addProduct: async (productData) => {
         const { titulo, imagen, descripcion, precio, stock } = productData;
         const sql = 'INSERT INTO products (titulo, imagen, descripcion, precio, stock) VALUES ($1, $2, $3, $4, $5) RETURNING *';
@@ -47,3 +47,4 @@ export const userModel = {
         }
     }
 };
+
