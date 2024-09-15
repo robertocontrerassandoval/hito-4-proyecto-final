@@ -11,7 +11,7 @@ config();
 const app = express();
 
 // Middleware
-app.use(cors()); // Permitir solicitudes de diferentes orígenes
+app.use(cors({origin: process.env.STATIC_SITE})); // Permitir solicitudes de diferentes orígenes
 app.use(express.json()); // Analizar el cuerpo de las solicitudes en formato JSON
 
 // Rutas
