@@ -104,20 +104,25 @@ function Login() {
 
   // Función para hacer login real
   const loginUser = async (email, password) => {
-    const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/login', { // Aquí se actualiza la URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Error en la autenticación');
+      if (!response.ok) {
+        const errorData = await response.json(); // Obtener detalles del error si existen
+        throw new Error(errorData.message || 'Error en la autenticación');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'Error de red');
     }
-
-    const data = await response.json();
-    return data;
   };
 
   return (
@@ -170,4 +175,3 @@ function Login() {
 }
 
 export default Login;
-
