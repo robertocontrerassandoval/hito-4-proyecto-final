@@ -85,44 +85,45 @@ function Login() {
     setLoading(true);
 
     try {
-      // Hacer una solicitud a tu backend para autenticar al usuario
       const response = await loginUser(email, password);
       setLoading(false);
 
-      if (response.success) {
-        setUser(response.user); // Guarda al usuario en el contexto global
-        navigate('/perfil'); // Redirige al perfil del usuario
+      console.log('Respuesta del servidor:', response); // Debugging
+
+      if (response.ok) {
+        setUser(response.data.user); // Ajusta según la estructura real
+        navigate('/perfil');
       } else {
-        setError('Credenciales incorrectas');
+        if (response.status === 401) {
+          setError('Credenciales incorrectas');
+        } else {
+          setError(response.data?.message || 'Ocurrió un error. Intenta nuevamente.');
+        }
       }
     } catch (error) {
       setLoading(false);
       console.error('Error en loginUser:', error); // Debugging
-      setError('Ocurrió un error. Intenta nuevamente.');
+      setError(error.message || 'Ocurrió un error. Intenta nuevamente.');
     }
   };
 
-  // Función para hacer login real
   const loginUser = async (email, password) => {
+    const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    let data;
     try {
-      const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', { // Aquí se actualiza la URL
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Obtener detalles del error si existen
-        throw new Error(errorData.message || 'Error en la autenticación');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw new Error(error.message || 'Error de red');
+      data = await response.json();
+    } catch (err) {
+      data = null;
     }
+
+    return { status: response.status, ok: response.ok, data };
   };
 
   return (
@@ -137,7 +138,7 @@ function Login() {
               <h2 className="text-center mb-4">Iniciar sesión</h2>
               <Form className="form-login justify-content-center" onSubmit={handleSubmit}>
                 {error && <div className="alert alert-danger">{error}</div>}
-                
+
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Correo electrónico</Form.Label>
                   <Form.Control
