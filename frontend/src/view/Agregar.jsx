@@ -1,77 +1,6 @@
-// import React, { useState, useEffect } from 'react';
-// import { useAppContext } from '../context/AppContext';
-// import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
-// import NavbarInicio from '../components/NavbarInicio';
-
-// const CrearProductoForm = () => {
-//   const { addProducto } = useAppContext();
-//   const [producto, setProducto] = useState({
-//     id: '',
-//     imagen: '',
-//     titulo: '',
-//     descripcion: '',
-//     precio: '',
-//     stock: ''
-//   });
-//   const [productoCreado, setProductoCreado] = useState(null);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
-//     if (productosGuardados.length > 0) {
-//       setProductoCreado(productosGuardados[productosGuardados.length - 1]);
-//     }
-//   }, []);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setProducto((prevProducto) => ({
-//       ...prevProducto,
-//       [name]: value
-//     }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const { titulo, descripcion, imagen, precio, stock } = producto;
-
-//     if (!titulo || !descripcion || !imagen || !precio || !stock) {
-//       setError('Todos los campos son requeridos');
-//       return;
-//     }
-
-//     if (parseFloat(precio) <= 0 || parseInt(stock) < 0) {
-//       setError('El precio debe ser positivo y el stock no puede ser negativo');
-//       return;
-//     }
-
-//     const nuevoProducto = {
-//       ...producto,
-//       id: Date.now()
-//     };
-//     addProducto(nuevoProducto);
-
-//     const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
-//     productosGuardados.push(nuevoProducto);
-//     localStorage.setItem('productos', JSON.stringify(productosGuardados));
-
-//     setProductoCreado(nuevoProducto);
-//     setError(null);
-
-//     setProducto({
-//       id: '',
-//       imagen: '',
-//       titulo: '',
-//       descripcion: '',
-//       precio: '',
-//       stock: ''
-//     });
-//   };
-
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
 import NavbarInicio from '../components/NavbarInicio';
 
 const CrearProductoForm = () => {
@@ -84,6 +13,15 @@ const CrearProductoForm = () => {
     precio: '',
     stock: ''
   });
+  const [productoCreado, setProductoCreado] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
+    if (productosGuardados.length > 0) {
+      setProductoCreado(productosGuardados[productosGuardados.length - 1]);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,11 +33,31 @@ const CrearProductoForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addProducto({
+    const { titulo, descripcion, imagen, precio, stock } = producto;
+
+    if (!titulo || !descripcion || !imagen || !precio || !stock) {
+      setError('Todos los campos son requeridos');
+      return;
+    }
+
+    if (parseFloat(precio) <= 0 || parseInt(stock) < 0) {
+      setError('El precio debe ser positivo y el stock no puede ser negativo');
+      return;
+    }
+
+    const nuevoProducto = {
       ...producto,
-      id: Date.now() // Genera un ID único
-    });
-    // Reinicia el formulario
+      id: Date.now()
+    };
+    addProducto(nuevoProducto);
+
+    const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
+    productosGuardados.push(nuevoProducto);
+    localStorage.setItem('productos', JSON.stringify(productosGuardados));
+
+    setProductoCreado(nuevoProducto);
+    setError(null);
+
     setProducto({
       id: '',
       imagen: '',
