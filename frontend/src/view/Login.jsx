@@ -105,7 +105,7 @@ function Login() {
   // Función para hacer login real
   const loginUser = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:3000', { // Aquí se actualiza la URL
+      const response = await fetch('http://localhost:3000/api/user/login', { // Aquí se actualiza la URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
