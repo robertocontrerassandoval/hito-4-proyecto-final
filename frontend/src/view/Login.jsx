@@ -107,7 +107,27 @@ function Login() {
     }
   };
 
+
   //Función para simular la autenticación
+  try {
+      const response = await fakeLogin(email, password);
+      setLoading(false);
+
+      console.log('Respuesta de fakeLogin:', response); // Debugging
+
+      if (response.success) {
+        setUser(response.user); // Guarda al usuario en el contexto global
+        navigate('/perfil'); // Redirige al perfil del usuario
+      } else {
+        setError('Credenciales incorrectas');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error en fakeLogin:', error); // Debugging
+      setError('Ocurrió un error. Intenta nuevamente.');
+    }
+  };
+
    const fakeLogin = (email, password) => {
      return new Promise((resolve) => {
        setTimeout(() => {
