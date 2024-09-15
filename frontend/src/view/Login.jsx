@@ -85,12 +85,8 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await loginUser(email, password);
-      setLoading(false);
-
-      const response = await fakeLogin(email, password);
-      setLoading(false);
-      
+      const response = await loginUser; fakeLogin (email, password);
+      setLoading(false);      
 
       console.log('Respuesta del servidor:', response); // Debugging
 
