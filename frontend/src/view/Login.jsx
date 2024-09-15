@@ -88,6 +88,10 @@ function Login() {
       const response = await loginUser(email, password);
       setLoading(false);
 
+      const response = await fakeLogin(email, password);
+      setLoading(false);
+      
+
       console.log('Respuesta del servidor:', response); // Debugging
 
       if (response.ok) {
@@ -107,39 +111,6 @@ function Login() {
     }
   };
 
-
-  //Función para simular la autenticación
-  try {
-      const response = await fakeLogin(email, password);
-      setLoading(false);
-
-      console.log('Respuesta de fakeLogin:', response); // Debugging
-
-      if (response.success) {
-        setUser(response.user); // Guarda al usuario en el contexto global
-        navigate('/perfil'); // Redirige al perfil del usuario
-      } else {
-        setError('Credenciales incorrectas');
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error('Error en fakeLogin:', error); // Debugging
-      setError('Ocurrió un error. Intenta nuevamente.');
-    }
-  };
-
-   const fakeLogin = (email, password) => {
-     return new Promise((resolve) => {
-       setTimeout(() => {
-         if (email === 'usuario@example.com' && password === '123456') {
-           resolve({ success: true, user: { nombre: 'Usuario Ejemplo', email: 'usuario@example.com' } });
-         } else {
-           resolve({ success: false });
-         }
-       }, 1000); // Simula un retardo de 1 segundo
-     });
-   };
-
   const loginUser = async (email, password) => {
     const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', {
       method: 'POST',
@@ -158,6 +129,20 @@ function Login() {
 
     return { status: response.status, ok: response.ok, data };
   };
+
+  //Función para simular la autenticación
+  const fakeLogin = (email, password) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (email === 'usuario@example.com' && password === '123456') {
+          resolve({ success: true, user: { nombre: 'Usuario Ejemplo', email: 'usuario@example.com' } });
+        } else {
+          resolve({ success: false });
+        }
+      }, 1000); // Simula un retardo de 1 segundo
+    });
+  };
+
 
   return (
     <Container>
