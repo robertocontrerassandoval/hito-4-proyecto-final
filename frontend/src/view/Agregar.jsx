@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Container, Form, Button, Card } from 'react-bootstrap';
+import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
 import NavbarInicio from '../components/NavbarInicio';
 
 const CrearProductoForm = () => {
@@ -14,9 +14,9 @@ const CrearProductoForm = () => {
     stock: ''
   });
   const [productoCreado, setProductoCreado] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Recupera productos almacenados del localStorage
     const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
     if (productosGuardados.length > 0) {
       setProductoCreado(productosGuardados[productosGuardados.length - 1]);
@@ -33,20 +33,31 @@ const CrearProductoForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const { titulo, descripcion, imagen, precio, stock } = producto;
+
+    if (!titulo || !descripcion || !imagen || !precio || !stock) {
+      setError('Todos los campos son requeridos');
+      return;
+    }
+
+    if (parseFloat(precio) <= 0 || parseInt(stock) < 0) {
+      setError('El precio debe ser positivo y el stock no puede ser negativo');
+      return;
+    }
+
     const nuevoProducto = {
       ...producto,
-      id: Date.now() // Genera un ID único
+      id: Date.now()
     };
     addProducto(nuevoProducto);
 
-    // Guardar el producto en localStorage
     const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
     productosGuardados.push(nuevoProducto);
     localStorage.setItem('productos', JSON.stringify(productosGuardados));
 
     setProductoCreado(nuevoProducto);
+    setError(null);
 
-    // Reinicia el formulario
     setProducto({
       id: '',
       imagen: '',
@@ -63,6 +74,7 @@ const CrearProductoForm = () => {
       <Container className="d-flex flex-column align-items-center">
         <h2>Crear Nuevo Producto</h2>
         <Form onSubmit={handleSubmit} className="w-50">
+          {error && <Alert variant="danger">{error}</Alert>}
           <Form.Group controlId="formBasicTitulo">
             <Form.Label>Título</Form.Label>
             <Form.Control
@@ -108,6 +120,8 @@ const CrearProductoForm = () => {
               value={producto.precio}
               onChange={handleChange}
               required
+              min="0.01"
+              step="0.01"
             />
           </Form.Group>
 
@@ -120,6 +134,7 @@ const CrearProductoForm = () => {
               value={producto.stock}
               onChange={handleChange}
               required
+              min="0"
             />
           </Form.Group>
 
@@ -133,15 +148,9 @@ const CrearProductoForm = () => {
             <Card.Img variant="top" src={productoCreado.imagen} />
             <Card.Body>
               <Card.Title>{productoCreado.titulo}</Card.Title>
-              <Card.Text>
-                {productoCreado.descripcion}
-              </Card.Text>
-              <Card.Text>
-                Precio: ${productoCreado.precio}
-              </Card.Text>
-              <Card.Text>
-                Stock: {productoCreado.stock}
-              </Card.Text>
+              <Card.Text>{productoCreado.descripcion}</Card.Text>
+              <Card.Text>Precio: ${productoCreado.precio}</Card.Text>
+              <Card.Text>Stock: {productoCreado.stock}</Card.Text>
             </Card.Body>
           </Card>
         )}
