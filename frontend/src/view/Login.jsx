@@ -85,8 +85,8 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await loginUser; fakeLogin (email, password);
-      setLoading(false);      
+      const response = await loginUser(email, password);
+      setLoading(false);
 
       console.log('Respuesta del servidor:', response); // Debugging
 
@@ -125,20 +125,6 @@ function Login() {
 
     return { status: response.status, ok: response.ok, data };
   };
-
-  //Función para simular la autenticación
-  const fakeLogin = (email, password) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (email === 'usuario@example.com' && password === '123456') {
-          resolve({ success: true, user: { nombre: 'Usuario Ejemplo', email: 'usuario@example.com' } });
-        } else {
-          resolve({ success: false });
-        }
-      }, 1000); // Simula un retardo de 1 segundo
-    });
-  };
-
 
   return (
     <Container>
