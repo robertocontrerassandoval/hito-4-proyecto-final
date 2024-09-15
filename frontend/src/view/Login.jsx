@@ -1,62 +1,3 @@
-import React, { useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import { Col, Row, Form, Button } from 'react-bootstrap';
-import NavbarInicioSesion from '../components/NavbarInicioSesion';
-import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext';
-
-function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { setUser } = useAppContext();
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    // Validación adicional del correo electrónico
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Ingresa un correo electrónico válido.');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await fakeLogin(email, password);
-      setLoading(false);
-
-      console.log('Respuesta de fakeLogin:', response); // Debugging
-
-      if (response.success) {
-        setUser(response.user); // Guarda al usuario en el contexto global
-        navigate('/perfil'); // Redirige al perfil del usuario
-      } else {
-        setError('Credenciales incorrectas');
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error('Error en fakeLogin:', error); // Debugging
-      setError('Ocurrió un error. Intenta nuevamente.');
-    }
-  };
-
-  // Función para simular la autenticación
-  const fakeLogin = (email, password) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (email === 'usuario@example.com' && password === '123456') {
-          resolve({ success: true, user: { nombre: 'Usuario Ejemplo', email: 'usuario@example.com' } });
-        } else {
-          resolve({ success: false });
-        }
-      }, 1000); // Simula un retardo de 1 segundo
-    });
-  };
-
 // import React, { useState } from 'react';
 // import Container from 'react-bootstrap/Container';
 // import { Col, Row, Form, Button } from 'react-bootstrap';
@@ -85,9 +26,10 @@ function Login() {
 //     setLoading(true);
 
 //     try {
-//       // Hacer una solicitud a tu backend para autenticar al usuario
-//       const response = await loginUser(email, password);
+//       const response = await fakeLogin(email, password);
 //       setLoading(false);
+
+//       console.log('Respuesta de fakeLogin:', response); // Debugging
 
 //       if (response.success) {
 //         setUser(response.user); // Guarda al usuario en el contexto global
@@ -97,33 +39,91 @@ function Login() {
 //       }
 //     } catch (error) {
 //       setLoading(false);
-//       console.error('Error en loginUser:', error); // Debugging
+//       console.error('Error en fakeLogin:', error); // Debugging
 //       setError('Ocurrió un error. Intenta nuevamente.');
 //     }
 //   };
 
-//   // Función para hacer login real
-//   const loginUser = async (email, password) => {
-//     try {
-//       const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', { // Aquí se actualiza la URL
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ email, password }),
-//       });
-
-//       if (!response.ok) {
-//         const errorData = await response.json(); // Obtener detalles del error si existen
-//         throw new Error(errorData.message || 'Error en la autenticación');
-//       }
-
-//       const data = await response.json();
-//       return data;
-//     } catch (error) {
-//       throw new Error(error.message || 'Error de red');
-//     }
+//   // Función para simular la autenticación
+//   const fakeLogin = (email, password) => {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         if (email === 'usuario@example.com' && password === '123456') {
+//           resolve({ success: true, user: { nombre: 'Usuario Ejemplo', email: 'usuario@example.com' } });
+//         } else {
+//           resolve({ success: false });
+//         }
+//       }, 1000); // Simula un retardo de 1 segundo
+//     });
 //   };
+
+import React, { useState } from 'react';
+import Container from 'react-bootstrap/Container';
+import { Col, Row, Form, Button } from 'react-bootstrap';
+import NavbarInicioSesion from '../components/NavbarInicioSesion';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AppContext';
+
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { setUser } = useAppContext();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    // Validación adicional del correo electrónico
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError('Ingresa un correo electrónico válido.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Hacer una solicitud a tu backend para autenticar al usuario
+      const response = await loginUser(email, password);
+      setLoading(false);
+
+      if (response.success) {
+        setUser(response.user); // Guarda al usuario en el contexto global
+        navigate('/perfil'); // Redirige al perfil del usuario
+      } else {
+        setError('Credenciales incorrectas');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error en loginUser:', error); // Debugging
+      setError('Ocurrió un error. Intenta nuevamente.');
+    }
+  };
+
+  // Función para hacer login real
+  const loginUser = async (email, password) => {
+    try {
+      const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/registerUser', { // Aquí se actualiza la URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Obtener detalles del error si existen
+        throw new Error(errorData.message || 'Error en la autenticación');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'Error de red');
+    }
+  };
 
   return (
     <Container>
