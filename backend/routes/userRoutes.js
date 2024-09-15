@@ -17,7 +17,8 @@ router.post('/usuario', validateUserCreation, controller.createUser);
 router.post('/login', validateLogin, controller.login);
 
 // Ruta para manejar errores 404 (no encontrada)
-router.use('*', controller.notFound);
+router.use('*', (req, res) => {
+  res.status(404).json({ message: 'Ruta no encontrada' });
+});
 
 export default router;
-
