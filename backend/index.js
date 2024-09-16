@@ -1,5 +1,5 @@
 import express from 'express';
-import cors from 'cors';
+
 import { config } from 'dotenv';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
