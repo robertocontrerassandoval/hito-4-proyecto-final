@@ -16,6 +16,10 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.26.2"
   },
+
+  
+"proxy": "hhttps://hito-4-proyecto-final-1-ozdl.onrender.com",
+
   "devDependencies": {
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
@@ -26,4 +30,6 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "vite": "^5.1.4"
   }
+
+  
 }
