@@ -11,11 +11,6 @@ import Perfil from './view/Perfil';
 import Productos from './view/Productos';
 import { AppProvider } from './context/AppContext';
 
-
-const urlBaseServer = "http://localhost:3000"; // a este puerto de apuntar
-
-
-
 const App = () => {
   return (
     <>
