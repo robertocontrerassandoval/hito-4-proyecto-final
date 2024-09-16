@@ -59,7 +59,7 @@
 
 import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import { Col, Row, Form, Button } from 'react-bootstrap';
+import { Col, Row, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import NavbarInicioSesion from '../components/NavbarInicioSesion';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
@@ -69,109 +69,120 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { setUser } = useAppContext();
+  const { setUser } = useAppContext(); // Contexto para gestionar el usuario
   const navigate = useNavigate();
+
+  // Función para manejar la respuesta de la API de login
+  const loginUser = async (email, password) => {
+    const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    let data;
+    try {
+      data = await response.json();
+    } catch (error) {
+      data = null;
+    }
+
+    return { status: response.status, ok: response.ok, data };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Validación adicional del correo electrónico
+    // Validación de email
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError('Ingresa un correo electrónico válido.');
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // Muestra spinner
 
     try {
-      // Hacer una solicitud a tu backend para autenticar al usuario
       const response = await loginUser(email, password);
-      setLoading(false);
+      setLoading(false); // Oculta spinner
 
-      if (response.success) {
-        setUser(response.user); // Guarda al usuario en el contexto global
-        navigate('/perfil'); // Redirige al perfil del usuario
+      if (response.ok) {
+        // Autenticación exitosa
+        setUser(response.data.user); // Actualiza usuario en contexto
+        navigate('/perfil'); // Redirige a perfil
       } else {
-        setError('Credenciales incorrectas');
+        // Manejo de errores en la respuesta
+        if (response.status === 401) {
+          setError('Credenciales incorrectas.');
+        } else {
+          setError(response.data?.message || 'Ocurrió un error. Intenta nuevamente.');
+        }
       }
     } catch (error) {
+      // Errores inesperados
       setLoading(false);
-      console.error('Error en loginUser:', error); // Debugging
+      console.error('Error en loginUser:', error);
       setError('Ocurrió un error. Intenta nuevamente.');
     }
   };
 
-  // Función para hacer login real
-  const loginUser = async (email, password) => {
-    try {
-      const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com', { // Aquí se actualiza la URL
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.json(); // Obtener detalles del error si existen
-        throw new Error(errorData.message || 'Error en la autenticación');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      throw new Error(error.message || 'Error de red');
-    }
-  };
+ 
 
   return (
-    <Container>
-      <Container className="container-login d-flex flex-column justify-content-space-around">
-        <Container>
-          <NavbarInicioSesion />
-        </Container>
-        <Row className="justify-content-center w-100">
-          <Col xs={12} md={8} lg={6} className="d-flex justify-content-center">
-            <div className="form-container-login d-flex flex-column justify-content-center align-items-center">
-              <h2 className="text-center mb-4">Iniciar sesión</h2>
-              <Form className="form-login justify-content-center" onSubmit={handleSubmit}>
-                {error && <div className="alert alert-danger">{error}</div>}
-                
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Correo electrónico</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Ingrese correo"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+    <Container className="mt-5">
+      <NavbarInicioSesion />
+      <Row className="justify-content-center mt-4">
+        <Col xs={12} md={8} lg={6}>
+          <div className="form-container-login p-4 shadow-sm rounded">
+            <h2 className="text-center mb-4">Iniciar sesión</h2>
+            
+            {/* Mostrar mensajes de error */}
+            {error && <Alert variant="danger">{error}</Alert>}
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Contraseña</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Ingresar contraseña"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Correo electrónico</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Ingrese correo"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </Form.Group>
 
-                <div className="d-flex justify-content-center">
-                  <Button variant="primary" type="submit" disabled={loading}>
-                    {loading ? 'Ingresando...' : 'Ingresar'}
-                  </Button>
-                </div>
-              </Form>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Contraseña</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Ingresar contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Form.Group>
+
+              <div className="d-flex justify-content-center">
+                <Button variant="primary" type="submit" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Spinner animation="border" size="sm" /> Ingresando...
+                    </>
+                  ) : (
+                    'Ingresar'
+                  )}
+                </Button>
+              </div>
+            </Form>
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 }
 
 export default Login;
+

@@ -1,27 +1,21 @@
 import pg from 'pg';
 import 'dotenv/config';
 
-const { Pool } = pg; // Pool es de pg
+const { Pool } = pg;
 
-// Desestructuramos las variables de entorno
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_DATABASE } = process.env;
-
-// Configuración del pool
 const config = {
-    host: DB_HOST,
-    port: DB_PORT,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_DATABASE,
-    allowExitOnIdle: true, // Permitir que el pool se cierre cuando está inactivo
-    idleTimeoutMillis: 30000, // Tiempo en milisegundos antes de que una conexión inactiva sea cerrada
-    connectionTimeoutMillis: 2000, // Tiempo en milisegundos antes de que una conexión sea rechazada si no se puede establecer
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'password',
+    database: process.env.DB_DATABASE || 'database',
+    allowExitOnIdle: true,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
 };
 
-// Inicializamos el pool
 const pool = new Pool(config);
 
-// Probar la conexión
 const testConnection = async () => {
     try {
         const res = await pool.query('SELECT NOW()');
@@ -33,5 +27,4 @@ const testConnection = async () => {
 
 testConnection();
 
-// Exportamos el pool para que pueda ser utilizado en otras partes del proyecto
 export default pool;
