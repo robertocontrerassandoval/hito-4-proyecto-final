@@ -1,5 +1,5 @@
 import express from 'express';
-
+import cors from 'cors';
 import { config } from 'dotenv';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -10,7 +10,12 @@ const app = express();
 
 // Middleware
 // Configuración de CORS
+const corsOptions = {
+    origin: 'https://hito-4-proyecto-final.onrender.com', // Ajusta según el origen que necesites permitir
+};
 
+// Usa CORS con las opciones especificadas
+app.use(cors(corsOptions));
 
 app.use(express.json()); // Analizar el cuerpo de las solicitudes en formato JSON
 
