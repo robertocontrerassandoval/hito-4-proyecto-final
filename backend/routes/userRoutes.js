@@ -14,7 +14,7 @@ router.post('/producto', verifyToken, controller.createProduct);
 router.post('/usuario', validateUserCreation, controller.createUser);
 
 // Ruta para login de usuario
-router.post('/login', validateLogin, controller.login);
+router.post('/login', controller.login);
 
 // Ruta para manejar errores 404 (no encontrada)
 router.use('*', (req, res) => {
