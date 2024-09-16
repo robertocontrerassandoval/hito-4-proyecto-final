@@ -64,6 +64,9 @@ import NavbarInicioSesion from '../components/NavbarInicioSesion';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -71,6 +74,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const { setUser } = useAppContext();
   const navigate = useNavigate();
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,8 +109,9 @@ function Login() {
 
   // Función para hacer login real
   const loginUser = async (email, password) => {
+
     try {
-      const response = await fetch('https://hito-4-proyecto-final.onrender.com', { // Aquí se actualiza la URL
+      const response = await fetch(`${API_URL}/login`, { // Aquí se actualiza la URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
