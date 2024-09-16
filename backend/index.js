@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 // Configuración de CORS
 const corsOptions = {
-    origin: 'http://localhost:5173', // Ajusta según el origen que necesites permitir
+    origin: 'https://hito-4-proyecto-final.onrender.com', // Ajusta según el origen que necesites permitir
 };
 
 // Usa CORS con las opciones especificadas
