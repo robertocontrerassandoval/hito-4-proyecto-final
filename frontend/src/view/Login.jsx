@@ -105,7 +105,7 @@ function Login() {
   // Función para hacer login real
   const loginUser = async (email, password) => {
     try {
-      const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com', { // Aquí se actualiza la URL
+      const response = await fetch('https://hito-4-proyecto-final.onrender.com/', { // Aquí se actualiza la URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
