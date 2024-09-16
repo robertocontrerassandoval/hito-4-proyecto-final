@@ -74,7 +74,7 @@ function Login() {
 
   // Función para manejar la respuesta de la API de login
   const loginUser = async (email, password) => {
-    const response = await fetch('https://hito-4-proyecto-final-7lqf.onrender.com/api/user/login', {
+    const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com/api/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -127,9 +127,6 @@ function Login() {
       setError('Ocurrió un error. Intenta nuevamente.');
     }
   };
-
-
- 
 
   return (
     <Container className="mt-5">
