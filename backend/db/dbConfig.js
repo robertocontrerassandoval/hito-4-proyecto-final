@@ -8,7 +8,7 @@ const config = {
     port: process.env.DB_PORT || 5432,
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'password',
-    database: process.env.DB_DATABASE || 'database',
+    database: process.env.DB_DATABASE || 'e-commers',
     allowExitOnIdle: true,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,

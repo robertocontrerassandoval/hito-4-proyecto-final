@@ -10,6 +10,7 @@ const app = express();
 
 // Middleware
 // Configuración de CORS
+
 const corsOptions = {
     origin: 'https://hito-4-proyecto-final.onrender.com', // Ajusta según el origen que necesites permitir
 };

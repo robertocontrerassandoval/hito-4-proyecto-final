@@ -53,7 +53,7 @@ function Login() {
   const loginUser = async (email, password) => {
 
     try {
-      const response = await fetch(`${API_URL}`, { // Aquí se actualiza la URL
+      const response = await fetch(`${API_URL}/api/user/login`, { // Aquí se actualiza la URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
