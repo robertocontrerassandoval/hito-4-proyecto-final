@@ -18,14 +18,14 @@ export const userModel = {
     
     // Obtener un usuario por email
     getUser: async (email) => {
-        const sql = 'SELECT * FROM users ';
+        const sql = 'SELECT * FROM users WHERE email = $1';
         
         try {
             const result = await pool.query(sql, [email]);
             if (result.rows.length === 0) {
                 return null;
             }
-            return result;
+            return result.rows[0];
         } catch (error) {
             console.error('Error al obtener usuario:', error);
             throw new Error('Error al obtener usuario');
