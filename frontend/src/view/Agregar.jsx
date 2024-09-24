@@ -34,12 +34,12 @@ const CrearProductoForm = () => {
     e.preventDefault();
     const nuevoProducto = {
       ...producto,
-      id: Date.now() // Genera un ID único (puedes dejar que el servidor lo genere si lo prefieres)
+      //id: Date.now() // Genera un ID único 
     };
   
     try {
       // Enviar el nuevo producto al servidor
-      const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com', {
+      const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com/api/products/productos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
