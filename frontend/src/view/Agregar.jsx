@@ -39,7 +39,7 @@ const CrearProductoForm = () => {
     };
 
     try {
-      const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com/api/products/producto', {
+      const response = await fetch('https://hito-4-proyecto-final.onrender.com/api/products/producto', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
