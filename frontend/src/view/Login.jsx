@@ -4,7 +4,7 @@ import { Col, Row, Form, Button } from 'react-bootstrap';
 import NavbarInicioSesion from '../components/NavbarInicioSesion';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-
+const API_URL = import.meta.env.VITE_API_URL;
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +26,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fakeLogin(email, password);
+      const response = await loginUser(email, password);
       setLoading(false);
 
       console.log('Respuesta de fakeLogin:', response); // Debugging
@@ -55,6 +55,28 @@ function Login() {
         }
       }, 1000); // Simula un retardo de 1 segundo
     });
+  };
+  const loginUser = async (email, password) => {
+
+    try {
+      const response = await fetch(`${API_URL}/api/user/login`, { // Aquí se actualiza la URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Obtener detalles del error si existen
+        throw new Error(errorData.message || 'Error en la autenticación');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(error.message || 'Error de red');
+    }
   };
 
   return (
