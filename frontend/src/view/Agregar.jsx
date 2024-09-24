@@ -6,7 +6,6 @@ import NavbarInicio from '../components/NavbarInicio';
 const CrearProductoForm = () => {
   const { addProducto } = useAppContext();
   const [producto, setProducto] = useState({
-    id: '',
     imagen: '',
     titulo: '',
     descripcion: '',
@@ -14,9 +13,9 @@ const CrearProductoForm = () => {
     stock: ''
   });
   const [productoCreado, setProductoCreado] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Recupera productos almacenados del localStorage
     const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
     if (productosGuardados.length > 0) {
       setProductoCreado(productosGuardados[productosGuardados.length - 1]);
@@ -30,15 +29,16 @@ const CrearProductoForm = () => {
       [name]: value
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nuevoProducto = {
       ...producto,
-      //id: Date.now() // Genera un ID único 
+      precio: parseFloat(producto.precio),
+      stock: parseInt(producto.stock, 10),
     };
-  
+
     try {
-      // Enviar el nuevo producto al servidor
       const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com/api/products/productos', {
         method: 'POST',
         headers: {
@@ -46,44 +46,41 @@ const CrearProductoForm = () => {
         },
         body: JSON.stringify(nuevoProducto)
       });
-  
+
       if (!response.ok) {
         throw new Error('Error al crear el producto');
       }
-  
+
       const data = await response.json();
-      addProducto(data); // Agrega el producto al contexto
-  
-      // Guardar el producto en localStorage (opcional)
+      addProducto(data);
+
       const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
       productosGuardados.push(data);
       localStorage.setItem('productos', JSON.stringify(productosGuardados));
-  
+
       setProductoCreado(data);
-  
-      // Reinicia el formulario
       setProducto({
-        id: '',
         imagen: '',
         titulo: '',
         descripcion: '',
         precio: '',
         stock: ''
       });
+      setError(null);
     } catch (error) {
+      setError('Error al crear el producto. Por favor, inténtalo de nuevo.');
       console.error(error);
     }
   };
-  
-
 
   return (
     <>
       <NavbarInicio />
       <Container className="d-flex flex-column align-items-center">
-        <br></br>
         <h2>Crear Nuevo Producto</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
         <Form onSubmit={handleSubmit} className="w-50">
+          {/* Campos del formulario */}
           <Form.Group controlId="formBasicTitulo">
             <Form.Label>Título</Form.Label>
             <Form.Control
@@ -95,7 +92,6 @@ const CrearProductoForm = () => {
               required
             />
           </Form.Group>
-
           <Form.Group controlId="formBasicDescripcion">
             <Form.Label>Descripción</Form.Label>
             <Form.Control
@@ -107,7 +103,6 @@ const CrearProductoForm = () => {
               required
             />
           </Form.Group>
-
           <Form.Group controlId="formBasicImagen">
             <Form.Label>Imagen</Form.Label>
             <Form.Control
@@ -119,7 +114,6 @@ const CrearProductoForm = () => {
               required
             />
           </Form.Group>
-
           <Form.Group controlId="formBasicPrecio">
             <Form.Label>Precio</Form.Label>
             <Form.Control
@@ -131,7 +125,6 @@ const CrearProductoForm = () => {
               required
             />
           </Form.Group>
-
           <Form.Group controlId="formBasicStock">
             <Form.Label>Stock</Form.Label>
             <Form.Control
@@ -143,7 +136,6 @@ const CrearProductoForm = () => {
               required
             />
           </Form.Group>
-
           <Button variant="primary" type="submit" className="mt-3">
             Agregar Producto
           </Button>
@@ -151,19 +143,12 @@ const CrearProductoForm = () => {
 
         {productoCreado && (
           <Card className="mt-1" style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={productoCreado.imagen}
-            style={{ height: '200px', objectFit: 'cover' }} />
+            <Card.Img variant="top" src={productoCreado.imagen} style={{ height: '200px', objectFit: 'cover' }} />
             <Card.Body>
               <Card.Title>{productoCreado.titulo}</Card.Title>
-              <Card.Text>
-                {productoCreado.descripcion}
-              </Card.Text>
-              <Card.Text>
-                Precio: ${productoCreado.precio}
-              </Card.Text>
-              <Card.Text>
-                Stock: {productoCreado.stock}
-              </Card.Text>
+              <Card.Text>{productoCreado.descripcion}</Card.Text>
+              <Card.Text>Precio: ${productoCreado.precio}</Card.Text>
+              <Card.Text>Stock: {productoCreado.stock}</Card.Text>
             </Card.Body>
           </Card>
         )}
