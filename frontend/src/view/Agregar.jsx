@@ -30,32 +30,52 @@ const CrearProductoForm = () => {
       [name]: value
     }));
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const nuevoProducto = {
       ...producto,
-      id: Date.now() // Genera un ID único
+      id: Date.now() // Genera un ID único (puedes dejar que el servidor lo genere si lo prefieres)
     };
-    addProducto(nuevoProducto);
-
-    // Guardar el producto en localStorage
-    const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
-    productosGuardados.push(nuevoProducto);
-    localStorage.setItem('productos', JSON.stringify(productosGuardados));
-
-    setProductoCreado(nuevoProducto);
-
-    // Reinicia el formulario
-    setProducto({
-      id: '',
-      imagen: '',
-      titulo: '',
-      descripcion: '',
-      precio: '',
-      stock: ''
-    });
+  
+    try {
+      // Enviar el nuevo producto al servidor
+      const response = await fetch('https://hito-4-proyecto-final.onrender.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(nuevoProducto)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al crear el producto');
+      }
+  
+      const data = await response.json();
+      addProducto(data); // Agrega el producto al contexto
+  
+      // Guardar el producto en localStorage (opcional)
+      const productosGuardados = JSON.parse(localStorage.getItem('productos')) || [];
+      productosGuardados.push(data);
+      localStorage.setItem('productos', JSON.stringify(productosGuardados));
+  
+      setProductoCreado(data);
+  
+      // Reinicia el formulario
+      setProducto({
+        id: '',
+        imagen: '',
+        titulo: '',
+        descripcion: '',
+        precio: '',
+        stock: ''
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
+
 
   return (
     <>
