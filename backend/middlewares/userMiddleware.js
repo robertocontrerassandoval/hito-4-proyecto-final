@@ -11,8 +11,8 @@ export const validateUserCreation = (req, res, next) => {
     const { name, email, password, date_birth } = req.body;
 
     // Verificación de campos vacíos
-    if (!name || !email || !password || !date_birth) {
-        return res.status(400).json({ message: 'Todos los campos (nombre, email, contraseña y fecha de nacimiento) son obligatorios.' });
+    if (!name || !email || !password ) {
+        return res.status(400).json({ message: 'Todos los campos (nombre, email, contraseña ) son obligatorios.' });
     }
 
     // Validación de formato de email
