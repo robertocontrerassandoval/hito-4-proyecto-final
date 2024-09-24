@@ -23,6 +23,8 @@ function Home() {
     e.preventDefault();
 
     try {
+
+      console.log('Datos enviados:', formData);
       const response = await fetch('https://hito-4-proyecto-final.onrender.com/api/user/usuario', {
         method: 'POST',
         headers: {

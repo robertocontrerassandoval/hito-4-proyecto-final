@@ -7,8 +7,7 @@ const router = express.Router();
 // Ruta principal
 router.get('/', controller.home);
 
-// Ruta para crear un nuevo producto (requiere autenticación con JWT)
-router.post('/producto', verifyToken, controller.createProduct);
+
 
 // Ruta para crear un nuevo usuario
 router.post('/usuario', validateUserCreation, controller.createUser);
