@@ -26,7 +26,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await loginUser(email, password);
+      const response = await fakeLogin(email, password);
       setLoading(false);
 
       console.log('Respuesta de fakeLogin:', response); // Debugging
