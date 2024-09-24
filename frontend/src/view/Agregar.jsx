@@ -39,7 +39,7 @@ const CrearProductoForm = () => {
   
     try {
       // Enviar el nuevo producto al servidor
-      const response = await fetch('postgresql://e_commers_user:NAu6LYPuBlRIbcYPU5g5n8nExgepTpoC@dpg-criapdij1k6c73artpv0-a.oregon-postgres.render.com/e_commers', {
+      const response = await fetch('https://hito-4-proyecto-final-1-ozdl.onrender.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
