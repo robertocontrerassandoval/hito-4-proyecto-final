@@ -34,7 +34,7 @@ function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al crear la cuenta');
+        throw new Error('Error al crear la cuenta',error);
       }
 
       const data = await response.json();
